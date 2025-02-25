@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from .api.journal import router as journal_router
 from .api.vector import router as vector_router
 from .db.database import engine
@@ -6,6 +7,15 @@ from .db.models import Base
 from .db.vectordb import vector_db
 
 app = FastAPI(title="AI Journal API")
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],  # React dev server
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.on_event("startup")
 async def init_db():

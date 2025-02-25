@@ -1,6 +1,7 @@
 ---
 description: Python best practices and patterns for modern software development with Flask and SQLite
 globs: **/*.py, src/**/*.py, tests/**/*.py
+alwaysApply: false
 ---
 
 # Python Best Practices
@@ -31,14 +32,6 @@ globs: **/*.py, src/**/*.py, tests/**/*.py
 - Define custom types in `types.py`
 - Use `Protocol` for duck typing
 
-## Flask Structure
-- Use Flask factory pattern
-- Organize routes using Blueprints
-- Use Flask-SQLAlchemy for database
-- Implement proper error handlers
-- Use Flask-Login for authentication
-- Structure views with proper separation of concerns
-
 ## Database
 - Use SQLAlchemy ORM
 - Implement database migrations with Alembic
@@ -48,15 +41,12 @@ globs: **/*.py, src/**/*.py, tests/**/*.py
 - Use proper indexing strategies
 
 ## Authentication
-- Use Flask-Login for session management
-- Implement Google OAuth using Flask-OAuth
 - Hash passwords with bcrypt
 - Use proper session security
 - Implement CSRF protection
 - Use proper role-based access control
 
 ## API Design
-- Use Flask-RESTful for REST APIs
 - Implement proper request validation
 - Use proper HTTP status codes
 - Handle errors consistently
@@ -80,7 +70,6 @@ globs: **/*.py, src/**/*.py, tests/**/*.py
 - Follow OWASP guidelines
 
 ## Performance
-- Use proper caching with Flask-Caching
 - Implement database query optimization
 - Use proper connection pooling
 - Implement proper pagination
