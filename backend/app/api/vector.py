@@ -1,12 +1,12 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Body
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 
 from ..db.vectordb import vector_db
 from ..db.database import get_db
 from ..db.models import JournalEntry
-from ..models.vector import VectorSearchQuery, VectorSearchResult
+from ..models.vector import VectorSearchQuery, VectorSearchResult, VectorUpdateRequest, VectorBatchOperation, VectorGetByIdsRequest
 
 router = APIRouter(prefix="/vector", tags=["vector"])
 
@@ -39,9 +39,12 @@ async def search_similar(
         db_entry = result.scalar_one_or_none()
         
         if db_entry:
+            # Ensure similarity score is between 0 and 1
+            # Using max to prevent negative values and min to cap at 1
+            similarity = max(0, min(1, 1 - distances[i]))
             entries.append({
                 "entry": db_entry,
-                "similarity_score": 1 - distances[i]  # Convert distance to similarity score
+                "similarity_score": similarity
             })
     
     return entries
@@ -58,6 +61,62 @@ async def get_vector_stats():
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error accessing vector database: {str(e)}")
+
+@router.post("/update")
+async def update_vector_entry(request: VectorUpdateRequest):
+    """Update an existing vector entry"""
+    try:
+        vector_db.update_entry(
+            id=request.id,
+            text=request.text,
+            metadata=request.metadata
+        )
+        return {"status": "success", "id": request.id}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error updating vector entry: {str(e)}")
+
+@router.post("/batch")
+async def batch_vector_operations(request: VectorBatchOperation):
+    """Perform batch operations on the vector database"""
+    try:
+        vector_db.batch_add_entries(
+            ids=request.ids,
+            texts=request.texts,
+            metadatas=request.metadatas
+        )
+        return {
+            "status": "success", 
+            "count": len(request.ids),
+            "operation": "batch_add"
+        }
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error performing batch operation: {str(e)}")
+
+@router.post("/get_by_ids")
+async def get_entries_by_ids(request: VectorGetByIdsRequest):
+    """Get vector entries by their IDs"""
+    try:
+        entries = vector_db.get_entries_by_ids(request.ids)
+        return {
+            "status": "success",
+            "entries": entries
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error retrieving vector entries: {str(e)}")
+
+@router.delete("/bulk_delete")
+async def bulk_delete_entries(ids: List[str] = Body(...)):
+    """Delete multiple entries from the vector database"""
+    try:
+        vector_db.bulk_delete_entries(ids)
+        return {
+            "status": "success",
+            "deleted_count": len(ids)
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error deleting vector entries: {str(e)}")
 
 @router.post("/sync")
 async def sync_vectors(

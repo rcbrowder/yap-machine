@@ -1,5 +1,6 @@
 import chromadb
 from chromadb.config import Settings
+from typing import List, Dict, Any, Optional
 from ..core.config import CHROMA_DATA_DIR
 
 class ChromaManager:
@@ -52,6 +53,43 @@ class ChromaManager:
             metadatas=[metadata or {}]
         )
     
+    def update_entry(self, id: str, text: str, metadata: dict = None):
+        """Update an existing entry in the journal collection
+        
+        Args:
+            id: Unique identifier for the entry to update
+            text: Updated text content to be embedded
+            metadata: Updated metadata for the entry
+        """
+        # Chroma handles upserts automatically
+        # If the ID exists, it will update it, otherwise create it
+        self.journal_collection.upsert(
+            ids=[id],
+            documents=[text],
+            metadatas=[metadata or {}]
+        )
+    
+    def batch_add_entries(self, ids: List[str], texts: List[str], metadatas: Optional[List[Dict[str, Any]]] = None):
+        """Add multiple entries to the journal collection in a single batch
+        
+        Args:
+            ids: List of unique identifiers for the entries
+            texts: List of text contents to be embedded
+            metadatas: List of metadata dictionaries for the entries
+        """
+        if metadatas is None:
+            metadatas = [{} for _ in ids]
+        
+        # Make sure all lists have the same length
+        if not (len(ids) == len(texts) == len(metadatas)):
+            raise ValueError("ids, texts, and metadatas must have the same length")
+            
+        self.journal_collection.add(
+            ids=ids,
+            documents=texts,
+            metadatas=metadatas
+        )
+    
     def query_similar(self, query_text: str, n_results: int = 5):
         """Query for similar entries
         
@@ -68,6 +106,21 @@ class ChromaManager:
         )
         return results
     
+    def get_entries_by_ids(self, ids: List[str]):
+        """Get entries by their IDs
+        
+        Args:
+            ids: List of entry IDs to retrieve
+            
+        Returns:
+            Dictionary containing the retrieved entries
+        """
+        results = self.journal_collection.get(
+            ids=ids,
+            include=["documents", "metadatas", "embeddings"]
+        )
+        return results
+    
     def delete_entry(self, id: str):
         """Delete an entry from the collection
         
@@ -75,6 +128,14 @@ class ChromaManager:
             id: Unique identifier for the entry to delete
         """
         self.journal_collection.delete(ids=[id])
+    
+    def bulk_delete_entries(self, ids: List[str]):
+        """Delete multiple entries from the collection
+        
+        Args:
+            ids: List of unique identifiers for the entries to delete
+        """
+        self.journal_collection.delete(ids=ids)
     
     def get_count(self):
         """Get the count of entries in the journal collection"""

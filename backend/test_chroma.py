@@ -68,7 +68,56 @@ def test_chroma_setup():
         print(f"❌ Error adding test entry: {e}")
         return False
     
-    # Test 5: Query for entries
+    # Test 5: Update an entry
+    print("\nUpdating the test entry...")
+    try:
+        chroma.update_entry(
+            id="test_entry_1",
+            text="This is an updated test entry for Chroma database",
+            metadata={"test": True, "timestamp": "2024-02-24", "updated": True}
+        )
+        print("✅ Successfully updated test entry")
+    except Exception as e:
+        print(f"❌ Error updating test entry: {e}")
+        return False
+    
+    # Test 6: Get entries by IDs
+    print("\nGetting entries by IDs...")
+    try:
+        entries = chroma.get_entries_by_ids(["test_entry_1"])
+        if entries and "documents" in entries and entries["documents"]:
+            print(f"✅ Successfully retrieved entries by IDs")
+            print(f"Document: {entries['documents'][0]}")
+            print(f"Metadata: {entries['metadatas'][0]}")
+        else:
+            print("❌ Failed to retrieve entries")
+            return False
+    except Exception as e:
+        print(f"❌ Error getting entries by IDs: {e}")
+        return False
+    
+    # Test 7: Batch add entries
+    print("\nAdding batch entries...")
+    try:
+        chroma.batch_add_entries(
+            ids=["batch_entry_1", "batch_entry_2", "batch_entry_3"],
+            texts=[
+                "This is the first batch entry",
+                "This is the second batch entry",
+                "This is the third batch entry"
+            ],
+            metadatas=[
+                {"batch": 1, "index": 0},
+                {"batch": 1, "index": 1},
+                {"batch": 1, "index": 2}
+            ]
+        )
+        print("✅ Successfully added batch entries")
+    except Exception as e:
+        print(f"❌ Error adding batch entries: {e}")
+        return False
+    
+    # Test 8: Query for similar entries
     print("\nQuerying for similar entries...")
     try:
         results = chroma.query_similar("test entry")
@@ -79,7 +128,7 @@ def test_chroma_setup():
         print(f"❌ Error querying entries: {e}")
         return False
     
-    # Test 6: Get count
+    # Test 9: Get count
     print("\nGetting entry count...")
     try:
         count = chroma.get_count()
@@ -88,7 +137,18 @@ def test_chroma_setup():
         print(f"❌ Error getting count: {e}")
         return False
     
-    # Test 7: Delete entry
+    # Test 10: Bulk delete entries
+    print("\nBulk deleting batch entries...")
+    try:
+        chroma.bulk_delete_entries(["batch_entry_1", "batch_entry_2", "batch_entry_3"])
+        new_count = chroma.get_count()
+        print(f"✅ Successfully deleted batch entries")
+        print(f"Collection now has {new_count} entries (should be 1)")
+    except Exception as e:
+        print(f"❌ Error bulk deleting entries: {e}")
+        return False
+    
+    # Test 11: Delete entry
     print("\nDeleting test entry...")
     try:
         chroma.delete_entry("test_entry_1")
@@ -97,11 +157,11 @@ def test_chroma_setup():
         print(f"❌ Error deleting test entry: {e}")
         return False
     
-    # Test 8: Verify deletion
+    # Test 12: Verify deletion
     print("\nVerifying deletion...")
     try:
         count = chroma.get_count()
-        print(f"✅ Collection now has {count} entries")
+        print(f"✅ Collection now has {count} entries (should be 0)")
     except Exception as e:
         print(f"❌ Error getting count after deletion: {e}")
         return False
