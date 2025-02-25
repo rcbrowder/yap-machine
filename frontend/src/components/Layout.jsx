@@ -1,39 +1,73 @@
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet, useLocation } from 'react-router-dom';
+import './Layout.css';
 
 function Layout() {
+  const location = useLocation();
+  
+  const isActive = (path) => {
+    return location.pathname === path;
+  };
+
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="layout">
       {/* Header */}
-      <header className="bg-white shadow">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex">
-              <div className="flex-shrink-0 flex items-center">
-                <h1 className="text-xl font-bold text-indigo-600">AI Journal</h1>
-              </div>
-              <nav className="ml-6 flex space-x-8">
+      <header className="header">
+        <div className="container">
+          <div className="nav-container">
+            <div className="logo-nav">
+              <Link to="/" className="logo-link">
+                <span className="logo-text">
+                  AI Journal
+                </span>
+              </Link>
+              <nav className="desktop-nav">
                 <Link 
                   to="/" 
-                  className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                  className={isActive('/') ? 'nav-link active' : 'nav-link'}
                 >
                   Journal Entries
                 </Link>
                 <Link 
                   to="/chat" 
-                  className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                  className={isActive('/chat') ? 'nav-link active' : 'nav-link'}
                 >
                   AI Chat
                 </Link>
               </nav>
+            </div>
+            
+            {/* Mobile menu button */}
+            <div className="mobile-nav">
+              <Link 
+                to="/" 
+                className={isActive('/') ? 'mobile-link active' : 'mobile-link'}
+              >
+                Journal
+              </Link>
+              <Link 
+                to="/chat" 
+                className={isActive('/chat') ? 'mobile-link active' : 'mobile-link'}
+              >
+                Chat
+              </Link>
             </div>
           </div>
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <main className="main-content">
         <Outlet />
       </main>
+      
+      {/* Footer */}
+      <footer className="footer">
+        <div className="container">
+          <p className="footer-text">
+            AI Journal - A private space to reflect and connect with your thoughts
+          </p>
+        </div>
+      </footer>
     </div>
   );
 }
