@@ -100,14 +100,21 @@ function JournalList() {
       </div>
 
       {safeEntries.length === 0 ? (
-        <div className="no-entries-container">
-          <div className="no-entries-content">
-            <svg xmlns="http://www.w3.org/2000/svg" className="icon-large" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+        <div className="empty-state">
+          <div className="empty-content">
+            <svg xmlns="http://www.w3.org/2000/svg" className="empty-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
             </svg>
-            <p className="no-entries-message">You don't have any journal entries yet.</p>
-            <Link to="/new" className="start-writing-button">
-              Start Writing
+            <h3 className="empty-title">No entries yet</h3>
+            <p className="empty-message">Start documenting your thoughts, ideas, and experiences by creating your first journal entry.</p>
+            <Link
+              to="/new"
+              className="new-entry-button"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="icon-small" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M10 3a1 1 0 00-1 1v5H4a1 1 0 100 2h5v5a1 1 0 102 0v-5h5a1 1 0 100-2h-5V4a1 1 0 00-1-1z" clipRule="evenodd" />
+              </svg>
+              Create your first entry
             </Link>
           </div>
         </div>
