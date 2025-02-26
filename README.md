@@ -1,88 +1,117 @@
 # AI Journal
 
-AI Journal is a private, local-first journaling application that combines traditional markdown journaling with AI-powered conversation capabilities. It allows you to write your thoughts in a simple interface and then interact with your journal through natural language to gain insights, retrieve specific memories, or analyze patterns in your writing.
-
-The application runs completely on your local machine using Docker containers, with no data ever leaving your device.
+AI Journal is a private, local-first journaling application that combines traditional markdown journaling with AI-powered conversation capabilities. It allows you to write and organize your thoughts in a clean, modern interface while providing powerful AI features for retrieving memories, gaining insights, and analyzing patterns in your writing.
 
 ## Features
 
-- Markdown-based journaling for simple and flexible writing
-- Encrypted storage for complete privacy
-- Vector-based semantic search for intelligent retrieval
-- AI conversation powered by a locally-run Ollama model
-- Containerized architecture ensuring all your personal reflections remain private and secure
+- **Markdown Journaling**: Write and edit journal entries with full markdown support
+- **Semantic Search**: Find related journal entries using natural language queries
+- **AI Conversation**: Interact with your journal through a chat interface powered by advanced language models
+- **Privacy-Focused**: All data stays on your device with local database storage
+- **Modern UI**: Clean, responsive interface for a distraction-free writing experience
+- **Retrieval-Augmented Generation (RAG)**: The AI assistant uses your journal entries as context to provide personalized responses
 
-## Tech Stack
+## Technology Stack
 
-- Frontend: React + Tailwind CSS
-- Backend: FastAPI (Python)
-- Database: SQLite (journal entries) + ChromaDB (vector embeddings)
-- AI: Ollama (Mistral-7B)
+### Frontend
+- React 19 with React Router for navigation
+- Modern JavaScript (ES6+)
+- Responsive UI with custom CSS styling
+- Markdown rendering for journal entries
 
-## Prerequisites
+### Backend
+- FastAPI (Python) RESTful API
+- SQLAlchemy with SQLite for relational data storage
+- ChromaDB for vector embeddings and semantic search
+- Langchain for Retrieval-Augmented Generation (RAG)
+- Support for OpenAI and local language models
 
-- Docker
-- Ollama (with Mistral-7B model installed)
+## Getting Started
 
-## Quick Start
+### Prerequisites
 
-1. Install Ollama from [ollama.ai](https://ollama.ai)
-2. Pull the Mistral-7B model:
-   ```
-   ollama pull mistral
-   ```
-3. Clone the repository:
+- [Docker](https://www.docker.com/products/docker-desktop/) for containerized deployment
+- For local LLM support (optional): [Ollama](https://ollama.ai) with Mistral model
+
+### Installation
+
+1. Clone the repository:
    ```
    git clone https://github.com/yourusername/ai-journal.git
    cd ai-journal
    ```
+
+2. (Optional) For local language model support:
+   - Install Ollama from [ollama.ai](https://ollama.ai)
+   - Pull the Mistral model:
+     ```
+     ollama pull mistral
+     ```
+
+3. Set up environment variables:
+   - Copy `.env.example` to `.env` in the backend directory
+   - Configure your preferred language model settings (OpenAI API key or Ollama endpoint)
+
 4. Start the application with Docker Compose:
    ```
    docker compose up --build
    ```
+
 5. Access the application:
-   - Journal Interface: http://localhost:3000
+   - Journal Interface: http://localhost:5173
    - API Documentation: http://localhost:8000/docs
 
-## Development Setup
+## Usage
 
-1. Clone the repository
-2. Run `docker compose up --build`
-3. Access the application at:
-   - Frontend: http://localhost:3000
-   - Backend API: http://localhost:8000
-   - API Documentation: http://localhost:8000/docs
+### Writing Journal Entries
+- Create new entries from the main journal list page
+- Edit existing entries by clicking on them in the list
+- Use markdown for formatting your entries
+
+### Searching Your Journal
+- Use the search box on the journal list page for keyword search
+- The search utilizes semantic similarity, not just exact text matching
+
+### Chatting with Your Journal
+- Navigate to the Chat tab to have AI-powered conversations about your journal
+- Ask questions about patterns, request summaries, or explore connections
+- The AI assistant uses RAG to provide context-aware responses based on your entries
 
 ## Project Structure
 
 ```
 .
-├── backend/
-│   ├── app/
-│   │   ├── api/        # API routes and endpoints
-│   │   ├── core/       # Core application logic
-│   │   ├── db/         # Database modules
-│   │   ├── models/     # Data models
-│   │   └── main.py     # Application entry point
-│   ├── data/           # Data storage directory
-│   ├── Dockerfile      # Backend container configuration
-│   ├── requirements.txt# Python dependencies
-│   └── test_chroma.py  # Vector database testing
-├── frontend/
-│   ├── public/         # Static public assets
+├── backend/                 # Python FastAPI backend
+│   ├── app/                 # Application code
+│   │   ├── api/             # API endpoints
+│   │   ├── db/              # Database models and connections
+│   │   ├── models/          # Pydantic data models
+│   │   └── services/        # Business logic and AI services
+│   ├── data/                # Data storage
+│   ├── Dockerfile           # Backend container config
+│   └── requirements.txt     # Python dependencies
+├── frontend/                # React frontend
 │   ├── src/
-│   │   ├── api/        # API service integrations
-│   │   ├── assets/     # Frontend assets
-│   │   ├── components/ # Reusable UI components
-│   │   ├── contexts/   # React context providers
-│   │   ├── pages/      # Application pages
-│   │   ├── utils/      # Utility functions
-│   │   ├── App.jsx     # Main application component
-│   │   └── main.jsx    # Entry point
-│   ├── Dockerfile      # Frontend container configuration
-│   ├── index.html      # HTML entry point
-│   ├── package.json    # JS dependencies
-│   └── vite.config.js  # Vite configuration
-├── docker-compose.yml  # Multi-container orchestration
-└── Dockerfile          # Main application container
+│   │   ├── api/             # API client services
+│   │   ├── components/      # Reusable UI components
+│   │   ├── contexts/        # React context providers
+│   │   ├── pages/           # Application views
+│   │   └── utils/           # Helper functions
+│   ├── Dockerfile           # Frontend container config
+│   └── package.json         # JS dependencies
+└── docker-compose.yml       # Container orchestration
 ```
+
+## Development
+
+### Backend Development
+- API documentation available at http://localhost:8000/docs
+- Changes to Python files are automatically reloaded in development
+
+### Frontend Development
+- React development server has hot-reloading enabled
+- CSS changes are immediately visible
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
