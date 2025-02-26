@@ -7,7 +7,7 @@ services:
       - "8000:8000"
     volumes:
       - ./backend:/app/backend
-      - ./backend/data:/app/backend/data
+      - backend_data:/app/data
     environment:
       - PYTHONUNBUFFERED=1
     init: true
@@ -25,4 +25,4 @@ services:
       - backend
 
 volumes:
-  backend_data: 
+  backend_data:
