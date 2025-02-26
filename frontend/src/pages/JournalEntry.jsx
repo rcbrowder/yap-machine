@@ -18,6 +18,7 @@ export default function JournalEntry() {
   const [isEditing, setIsEditing] = useState(isNewEntry);
   const [isSaving, setIsSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
 
   useEffect(() => {
     if (!isNewEntry) {
@@ -63,6 +64,7 @@ export default function JournalEntry() {
       } else {
         await journalService.updateEntry(id, entry);
         setIsEditing(false);
+        setShowPreview(false);
         setSaveSuccess(true);
         
         // Clear success message after 3 seconds
@@ -201,6 +203,16 @@ export default function JournalEntry() {
                   isEditing && (
                     <>
                       <button 
+                        className="preview-button"
+                        onClick={() => setShowPreview(!showPreview)}
+                      >
+                        <svg className="icon-small" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                        {showPreview ? 'Edit' : 'Preview'}
+                      </button>
+                      <button 
                         className="save-button"
                         onClick={handleSave}
                       >
@@ -210,6 +222,7 @@ export default function JournalEntry() {
                         className="cancel-button"
                         onClick={() => {
                           setIsEditing(false);
+                          setShowPreview(false);
                           handleInputChange({ target: { name: 'title', value: entry.title } });
                           handleInputChange({ target: { name: 'content', value: entry.content } });
                         }}
@@ -247,17 +260,30 @@ export default function JournalEntry() {
 
             {isEditing ? (
               <div className="content-edit-container">
-                <label className="content-label">
-                  Content
-                  <span className="markdown-hint"> (Markdown supported)</span>
-                </label>
-                <textarea
-                  className="content-textarea"
-                  value={entry.content}
-                  onChange={handleInputChange}
-                  name="content"
-                  placeholder="Write your journal entry here..."
-                ></textarea>
+                {showPreview ? (
+                  <div className="markdown-preview">
+                    <div className="preview-header">
+                      <h3>Preview</h3>
+                    </div>
+                    <div className="preview-content">
+                      <ReactMarkdown>{entry.content}</ReactMarkdown>
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    <label className="content-label">
+                      Content
+                      <span className="markdown-hint"> (Markdown supported)</span>
+                    </label>
+                    <textarea
+                      className="content-textarea"
+                      value={entry.content}
+                      onChange={handleInputChange}
+                      name="content"
+                      placeholder="Write your journal entry here..."
+                    ></textarea>
+                  </>
+                )}
               </div>
             ) : (
               <div className="entry-content">
