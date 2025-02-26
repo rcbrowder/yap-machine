@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .api.journal import router as journal_router
 from .api.vector import router as vector_router
+from .api.chat import router as chat_router
 from .db.database import engine
 from .db.models import Base
 from .db.vectordb import vector_db
@@ -30,6 +31,7 @@ async def init_db():
 
 app.include_router(journal_router)
 app.include_router(vector_router)
+app.include_router(chat_router)
 
 @app.get("/health")
 async def health_check():

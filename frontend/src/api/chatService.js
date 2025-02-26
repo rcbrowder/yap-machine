@@ -1,26 +1,19 @@
 import apiClient from './client';
 
-// This is a placeholder service - we'll implement the actual
-// chat API endpoints when we add Ollama integration to the backend
+// Chat service implementation using the backend RAG chatbot API
 const chatService = {
   // Send a message to the AI assistant
-  sendMessage: async (message) => {
+  sendMessage: async (message, history = []) => {
     try {
-      // This is a placeholder - in the final implementation,
-      // we'll send the message to the backend which will use Ollama
-      // For now, return a mock response
-      
-      // Simulate network delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const response = await apiClient.post('/chat/message', {
+        message: message,
+        history: history
+      });
       
       return {
         role: 'assistant',
-        content: `This is a placeholder response. When the Ollama integration is complete, I'll be able to respond intelligently to: "${message}"`
+        content: response.data.response
       };
-      
-      // TODO: Replace with actual API call when backend is ready
-      // const response = await apiClient.post('/chat', { message });
-      // return response.data;
     } catch (error) {
       console.error('Error sending message to AI assistant:', error);
       throw error;
@@ -28,23 +21,34 @@ const chatService = {
   },
   
   // Search journal entries and use them for context in the chat
-  contextualChat: async (message) => {
+  contextualChat: async (message, history = []) => {
     try {
-      // Simulate network delay
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      // Format the history for the API
+      const formattedHistory = history.map(msg => ({
+        role: msg.role,
+        content: msg.content,
+        timestamp: new Date().toISOString()
+      }));
       
+      // Send the message to the backend
+      const response = await apiClient.post('/chat/message', {
+        message: message,
+        history: formattedHistory
+      });
+      
+      // Return the response in the expected format
       return {
         role: 'assistant',
-        content: `In the future, I'll search your journal for entries related to "${message}" and provide a contextual response based on your writing history.`
+        content: response.data.response,
+        contexts: response.data.retrieved_contexts
       };
-      
-      // TODO: Replace with actual implementation
-      // 1. Search for relevant entries using vector search
-      // 2. Send the entries along with the user message to Ollama
-      // 3. Return the AI's response
     } catch (error) {
       console.error('Error with contextual chat:', error);
-      throw error;
+      // Return a fallback response in case of an error
+      return {
+        role: 'assistant',
+        content: "I'm sorry, I encountered an error while processing your request. Please try again later."
+      };
     }
   }
 };

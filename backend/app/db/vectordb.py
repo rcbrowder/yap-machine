@@ -100,6 +100,22 @@ class ChromaManager:
         Returns:
             List of similar entries
         """
+        # Check if the collection is empty first
+        if self.get_count() == 0:
+            # Return an empty result structure to avoid errors
+            return {
+                "ids": [[]],
+                "distances": [[]],
+                "metadatas": [[]],
+                "documents": [[]]
+            }
+        
+        # Adjust n_results if it's larger than the collection size
+        count = self.get_count()
+        if n_results > count:
+            n_results = count
+        
+        # Now perform the query with the adjusted parameters
         results = self.journal_collection.query(
             query_texts=[query_text],
             n_results=n_results
@@ -139,7 +155,9 @@ class ChromaManager:
     
     def get_count(self):
         """Get the count of entries in the journal collection"""
-        return self.journal_collection.count()
+        count = self.journal_collection.count()
+        print(f"DEBUG: Vector database count is: {count}")
+        return count
 
 # Singleton instance
 vector_db = ChromaManager() 

@@ -1,7 +1,7 @@
 import apiClient from './client';
 
 // Mock data to use when API fails
-const MOCK_ENTRIES = [
+const DEFAULT_MOCK_ENTRIES = [
   {
     id: '1',
     title: 'Getting Started with AI Journal',
@@ -18,8 +18,33 @@ const MOCK_ENTRIES = [
   }
 ];
 
+// Get mock entries from localStorage or use defaults
+const getMockEntries = () => {
+  try {
+    const savedEntries = localStorage.getItem('mockJournalEntries');
+    if (savedEntries) {
+      return JSON.parse(savedEntries);
+    }
+  } catch (error) {
+    console.error('Error reading from localStorage:', error);
+  }
+  return [...DEFAULT_MOCK_ENTRIES];
+};
+
+// Save mock entries to localStorage
+const saveMockEntries = (entries) => {
+  try {
+    localStorage.setItem('mockJournalEntries', JSON.stringify(entries));
+  } catch (error) {
+    console.error('Error saving to localStorage:', error);
+  }
+};
+
+// Initialize MOCK_ENTRIES from localStorage
+let MOCK_ENTRIES = getMockEntries();
+
 // Flag to enable/disable mock data
-const USE_MOCK_DATA = true;
+const USE_MOCK_DATA = false;
 
 const journalService = {
   // Get all journal entries
@@ -27,6 +52,8 @@ const journalService = {
     // If mock data is enabled, return mock entries
     if (USE_MOCK_DATA) {
       console.log('Using mock data for journal entries');
+      // Refresh from localStorage in case it was updated elsewhere
+      MOCK_ENTRIES = getMockEntries();
       return MOCK_ENTRIES;
     }
     
@@ -46,6 +73,8 @@ const journalService = {
     // If mock data is enabled, find the entry in mock data
     if (USE_MOCK_DATA) {
       console.log(`Using mock data for journal entry ${id}`);
+      // Refresh from localStorage
+      MOCK_ENTRIES = getMockEntries();
       const entry = MOCK_ENTRIES.find(entry => entry.id === id);
       if (entry) return entry;
       // If not found and id is 'new', return empty entry
@@ -74,6 +103,8 @@ const journalService = {
   createEntry: async (entryData) => {
     if (USE_MOCK_DATA) {
       console.log('Creating mock entry:', entryData);
+      // Refresh from localStorage
+      MOCK_ENTRIES = getMockEntries();
       const newEntry = {
         ...entryData,
         id: String(MOCK_ENTRIES.length + 1),
@@ -81,6 +112,8 @@ const journalService = {
         updated_at: new Date().toISOString()
       };
       MOCK_ENTRIES.push(newEntry);
+      // Save to localStorage
+      saveMockEntries(MOCK_ENTRIES);
       return newEntry;
     }
     
@@ -97,6 +130,8 @@ const journalService = {
   updateEntry: async (id, entryData) => {
     if (USE_MOCK_DATA) {
       console.log(`Updating mock entry ${id}:`, entryData);
+      // Refresh from localStorage
+      MOCK_ENTRIES = getMockEntries();
       const index = MOCK_ENTRIES.findIndex(entry => entry.id === id);
       if (index !== -1) {
         const updatedEntry = {
@@ -105,6 +140,8 @@ const journalService = {
           updated_at: new Date().toISOString()
         };
         MOCK_ENTRIES[index] = updatedEntry;
+        // Save to localStorage
+        saveMockEntries(MOCK_ENTRIES);
         return updatedEntry;
       }
       throw new Error('Entry not found');
@@ -123,9 +160,13 @@ const journalService = {
   deleteEntry: async (id) => {
     if (USE_MOCK_DATA) {
       console.log(`Deleting mock entry ${id}`);
+      // Refresh from localStorage
+      MOCK_ENTRIES = getMockEntries();
       const index = MOCK_ENTRIES.findIndex(entry => entry.id === id);
       if (index !== -1) {
         const deleted = MOCK_ENTRIES.splice(index, 1)[0];
+        // Save to localStorage
+        saveMockEntries(MOCK_ENTRIES);
         return { success: true, deleted };
       }
       throw new Error('Entry not found');
@@ -144,6 +185,8 @@ const journalService = {
   searchEntries: async (queryText, maxResults = 5) => {
     if (USE_MOCK_DATA) {
       console.log(`Searching mock entries for: ${queryText}`);
+      // Refresh from localStorage
+      MOCK_ENTRIES = getMockEntries();
       // Simple search implementation - just checks if query is in title or content
       const results = MOCK_ENTRIES
         .filter(entry => 
