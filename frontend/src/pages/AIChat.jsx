@@ -2,17 +2,21 @@ import { useState, useRef, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import chatService from '../api/chatService';
 import './AIChat.css';
+import { useChat } from '../contexts/ChatContext';
 
 function AIChat() {
-  const [messages, setMessages] = useState([
-    {
-      role: 'assistant',
-      content: "Hello! I'm your AI-powered journal assistant. You can ask me questions about your journal entries or have a conversation about them."
-    }
-  ]);
+  // Use the chat context instead of local state
+  const {
+    messages,
+    retrievedContexts,
+    isLoading,
+    updateMessages,
+    updateRetrievedContexts,
+    setIsLoading,
+    resetChat
+  } = useChat();
+  
   const [inputText, setInputText] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [retrievedContexts, setRetrievedContexts] = useState([]);
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -54,7 +58,11 @@ function AIChat() {
       content: inputText
     };
     
-    setMessages(prev => [...prev, userMessage]);
+    // Create a new array with the user message
+    const updatedMessages = [...messages, userMessage];
+    
+    // Update messages in context
+    updateMessages(updatedMessages);
     setInputText('');
     setIsLoading(true);
     
@@ -63,20 +71,20 @@ function AIChat() {
       const response = await chatService.contextualChat(userMessage.content, messages);
       
       // Add the AI's response to the messages
-      setMessages(prev => [...prev, {
+      updateMessages([...updatedMessages, {
         role: 'assistant',
         content: response.content
       }]);
 
       // Set retrieved contexts if available
       if (response.contexts) {
-        setRetrievedContexts(response.contexts);
+        updateRetrievedContexts(response.contexts);
       }
     } catch (error) {
       console.error('Error getting AI response:', error);
       // Add an error message
-      setMessages(prev => [
-        ...prev,
+      updateMessages([
+        ...updatedMessages,
         {
           role: 'assistant',
           content: "I'm sorry, I had trouble processing your request. Please try again later."
@@ -107,6 +115,17 @@ function AIChat() {
             <h2 className="header-title">AI Journal Assistant</h2>
             <p className="header-subtitle">Ask questions about your journal entries</p>
           </div>
+          <button 
+            onClick={resetChat} 
+            className="reset-button"
+            title="Reset conversation"
+            aria-label="Reset conversation"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="icon-small" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            <span>Reset</span>
+          </button>
         </div>
       </div>
       

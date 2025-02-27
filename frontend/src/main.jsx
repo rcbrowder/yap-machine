@@ -7,6 +7,7 @@ import Layout from './components/Layout'
 import JournalList from './pages/JournalList'
 import JournalEntry from './pages/JournalEntry'
 import AIChat from './pages/AIChat'
+import { ChatProvider } from './contexts/ChatContext'
 
 const router = createBrowserRouter([
   {
@@ -35,6 +36,8 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <ChatProvider>
+      <RouterProvider router={router} />
+    </ChatProvider>
   </React.StrictMode>,
 )
