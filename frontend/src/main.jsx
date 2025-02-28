@@ -1,8 +1,8 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import './output.css'
 import './index.css'
+import './output.css'
 
 import Layout from './components/Layout'
 import JournalList from './pages/JournalList'

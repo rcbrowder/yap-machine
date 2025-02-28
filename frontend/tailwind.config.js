@@ -4,31 +4,31 @@ module.exports = {
     theme: {
         extend: {
           colors: {
-            main: 'var(--main)',
-            mainAccent: 'var(--mainAccent)',
-            overlay: 'var(--overlay)',
-            bg: 'var(--bg)',
-            bw: 'var(--bw)',
-            blank: 'var(--blank)',
-            text: 'var(--text)',
-            mtext: 'var(--mtext)',
-            border: 'var(--border)',
-            ring: 'var(--ring)',
-            ringOffset: 'var(--ring-offset)',
-            
+            // Define colors directly with hex values
+            main: '#FD9745',
+            mainAccent: '#E87928',
+            overlay: 'rgba(0, 0, 0, 0.8)',
+            bg: '#fff4e0',
+            bw: '#fff',
+            blank: '#000',
+            text: '#000',
+            mtext: '#000',
+            border: '#000',
+            ring: '#000',
+            ringOffset: '#fff',
             secondaryBlack: '#212121', 
           },
           borderRadius: {
             base: '4px'
           },
           boxShadow: {
-            shadow: 'var(--shadow)'
+            'neobrutalism': '4px 4px 0px 0px #000'
           },
           translate: {
-            boxShadowX: '4px',
-            boxShadowY: '4px',
-            reverseBoxShadowX: '-4px',
-            reverseBoxShadowY: '-4px',
+            'shadowX': '4px',
+            'shadowY': '4px',
+            'reverseShadowX': '-4px',
+            'reverseShadowY': '-4px',
           },
           fontWeight: {
             base: '500',
@@ -36,6 +36,17 @@ module.exports = {
           },
         },
     },
+    safelist: [
+      'bg-main',
+      'bg-mainAccent',
+      'bg-bg',
+      'bg-bw',
+      'text-main',
+      'text-blank',
+      'text-text',
+      'border-border',
+      'shadow-neobrutalism'
+    ],
     plugins: [
       require('@tailwindcss/typography'),
     ],
