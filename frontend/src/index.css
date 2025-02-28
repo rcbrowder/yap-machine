@@ -1,81 +1,42 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
+@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+  
+:root {
+  --main: #FD9745; /* Burnt orange for main elements */
+  --mainAccent: #E87928; /* Darker orange for active elements */
+  --overlay: rgba(0, 0, 0, 0.8); /* background color overlay for alert dialogs, modals, etc. */
 
-/* Base styles */
-html, body {
-  height: 100%;
-  min-height: 100vh;
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  background-color: #f3f4f6;
-  color: #1f2937;
+  --bg: #fff4e0; /* Light orange-beige background */
+  --bw: #fff; /* white and secondary black */
+  --blank: #000; /* blank black and white */
+  --border: #000; /* Black borders for contrast */
+  --text: #000; /* Black text */
+  --mtext: #000; /* text that is placed on background with main color */
+  --ring: #000; /* Black rings */
+  --ring-offset: #fff;
+
+  --border-radius: 4px;
+  --box-shadow-x: 4px;
+  --box-shadow-y: 4px;
+  --reverse-box-shadow-x: -4px;
+  --reverse-box-shadow-y: -4px;
+  --base-font-weight: 500;
+  --heading-font-weight: 700;
+
+  --shadow: var(--box-shadow-x) var(--box-shadow-y) 0px 0px var(--border);
 }
 
-/* Smooth scrolling */
-* {
-  scroll-behavior: smooth;
-}
+.dark {
+  --bg: #272933;
+  --bw: #212121;
+  --blank: #fff;
+  --border: #000;
+  --text: #e6e6e6;
+  --mtext: #000;
+  --ring: #fff;
+  --ring-offset: #000;
 
-/* Custom scrollbar styles */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background-color: #f3f4f6;
-}
-
-::-webkit-scrollbar-thumb {
-  background-color: #d1d5db;
-  border-radius: 9999px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background-color: #9ca3af;
-}
-
-/* Focus styles for better accessibility */
-*:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5), 0 0 0 4px rgba(255, 255, 255, 1);
-}
-
-/* Typography styles */
-.prose a {
-  color: #2563eb;
-  text-decoration: none;
-  transition: color 0.15s ease;
-}
-
-.prose a:hover {
-  color: #1d4ed8;
-}
-
-.prose pre {
-  background-color: #1f2937;
-  color: #f3f4f6;
-  padding: 1rem;
-  border-radius: 0.5rem;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.875rem;
-}
-
-.prose code {
-  font-family: 'JetBrains Mono', monospace;
-  color: #1f2937;
-  background-color: #f3f4f6;
-  padding: 0.125rem 0.25rem;
-  border-radius: 0.25rem;
-  font-size: 0.875rem;
-}
-
-.prose pre code {
-  background-color: transparent;
-  color: #f3f4f6;
-  padding: 0;
-}
-
-/* Transitions */
-.transition-element {
-  transition: all 0.2s ease-in-out;
+  --shadow: var(--box-shadow-x) var(--box-shadow-y) 0px 0px var(--border);
 }
