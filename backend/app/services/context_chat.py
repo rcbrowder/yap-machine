@@ -108,8 +108,9 @@ class ContextChatService:
                     system_prompt=custom_system_prompt
                 )
                 
-                # Run the agent with the user's query
-                response = await context_agent.run(message, client=self.client)
+                # Set the OpenAI client in the agent's config
+                # Run the agent with the user's query (removed client parameter)
+                response = await context_agent.run(message)
                 response_text = response.content
             except Exception as e:
                 logger.error(f"Error invoking model: {e}")
