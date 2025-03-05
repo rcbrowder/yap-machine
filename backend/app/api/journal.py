@@ -9,7 +9,6 @@ from ..models.journal import JournalEntry as JournalEntrySchema
 from ..models.journal import JournalEntryCreate, JournalEntryUpdate
 from ..db.database import get_db
 from ..db.models import JournalEntry
-from ..db.vectordb import vector_db
 
 router = APIRouter(prefix="/journal", tags=["journal"])
 
@@ -26,23 +25,6 @@ async def create_entry(
     db.add(db_entry)
     await db.commit()
     await db.refresh(db_entry)
-    
-    # Add to vector database
-    try:
-        full_text = f"{db_entry.title}\n\n{db_entry.content}"
-        metadata = {
-            "title": db_entry.title,
-            "created_at": db_entry.created_at.isoformat(),
-            "updated_at": db_entry.updated_at.isoformat()
-        }
-        vector_db.add_entry(
-            id=db_entry.id,
-            text=full_text,
-            metadata=metadata
-        )
-    except Exception as e:
-        # Log the error but don't fail the request
-        print(f"Error adding to vector database: {str(e)}")
     
     return db_entry
 
@@ -84,26 +66,6 @@ async def update_entry(
     await db.commit()
     await db.refresh(db_entry)
     
-    # Update in vector database
-    try:
-        full_text = f"{db_entry.title}\n\n{db_entry.content}"
-        metadata = {
-            "title": db_entry.title,
-            "created_at": db_entry.created_at.isoformat(),
-            "updated_at": db_entry.updated_at.isoformat()
-        }
-        
-        # Delete and re-add to update
-        vector_db.delete_entry(id=db_entry.id)
-        vector_db.add_entry(
-            id=db_entry.id,
-            text=full_text,
-            metadata=metadata
-        )
-    except Exception as e:
-        # Log the error but don't fail the request
-        print(f"Error updating vector database: {str(e)}")
-    
     return db_entry
 
 @router.delete("/{entry_id}")
@@ -119,11 +81,4 @@ async def delete_entry(
     await db.delete(db_entry)
     await db.commit()
     
-    # Delete from vector database
-    try:
-        vector_db.delete_entry(id=entry_id)
-    except Exception as e:
-        # Log the error but don't fail the request
-        print(f"Error deleting from vector database: {str(e)}")
-    
-    return {"detail": "Entry deleted successfully"} 
+    return {"detail": "Entry deleted successfully"}

@@ -32,6 +32,7 @@ class ChatInput(BaseModel):
             raise ValueError("Message cannot be empty")
         return v
 
+# Keep RetrievedContext for API compatibility, though we won't be using it anymore
 class RetrievedContext(BaseModel):
     """Model representing retrieved context from journal entries"""
     entry_id: str = Field(..., description="ID of the retrieved journal entry")
@@ -67,7 +68,7 @@ class ChatResponse(BaseModel):
     """Model for chat response"""
     response: str = Field(..., description="Response message from the assistant")
     retrieved_contexts: Optional[List[RetrievedContext]] = Field(
-        default=None, 
-        description="Contexts retrieved from journal entries"
+        default_factory=list, 
+        description="Contexts retrieved from journal entries (kept for API compatibility)"
     )
-    timestamp: datetime = Field(default_factory=datetime.now, description="Timestamp of the response") 
+    timestamp: datetime = Field(default_factory=datetime.now, description="Timestamp of the response")
