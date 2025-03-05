@@ -25,25 +25,7 @@ function AIChat() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  useEffect(() => {
-    // Sync the vector database with journal entries when the component mounts
-    const syncVectorDatabase = async () => {
-      try {
-        const response = await fetch('http://localhost:8000/vector/sync', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        });
-        const data = await response.json();
-        console.log('Vector database synced:', data);
-      } catch (error) {
-        console.error('Error syncing vector database:', error);
-      }
-    };
-    
-    syncVectorDatabase();
-  }, []);
+  // No need to sync a vector database anymore since we're using full context
 
   useEffect(() => {
     scrollToBottom();
