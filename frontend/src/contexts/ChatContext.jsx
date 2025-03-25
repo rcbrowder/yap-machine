@@ -1,7 +1,7 @@
-import { createContext, useContext, useState, useCallback } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 
 // Create the chat context
-const ChatContext = createContext(null);
+const ChatContext = createContext();
 
 // Initial chat state
 const initialChatState = {
@@ -29,68 +29,36 @@ const sanitizeContent = (content) => {
 
 // Chat context provider component
 export function ChatProvider({ children }) {
-  const [chatState, setChatState] = useState(initialChatState);
+  const [messages, setMessages] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Update the chat state with new messages using memoized callbacks
-  const updateMessages = useCallback((newMessages) => {
-    // Sanitize all message content for security
-    const sanitizedMessages = newMessages.map(message => ({
-      ...message,
-      content: sanitizeContent(message.content)
-    }));
-    
-    setChatState(prevState => ({
-      ...prevState,
-      messages: sanitizedMessages
-    }));
-  }, []);
-
-  // Update the retrieved contexts
-  const updateRetrievedContexts = useCallback((contexts) => {
-    // Sanitize context content for security
-    const sanitizedContexts = contexts.map(context => ({
-      ...context,
-      content_snippet: sanitizeContent(context.content_snippet),
-      title: sanitizeContent(context.title)
-    }));
-    
-    setChatState(prevState => ({
-      ...prevState,
-      retrievedContexts: sanitizedContexts
-    }));
-  }, []);
-
-  // Set the loading state
-  const setIsLoading = useCallback((isLoading) => {
-    setChatState(prevState => ({
-      ...prevState,
-      isLoading
-    }));
-  }, []);
-
-  // Reset the chat to initial state
-  const resetChat = useCallback(() => {
-    setChatState(initialChatState);
-  }, []);
-
-  // The context value object
-  const value = {
-    messages: chatState.messages,
-    retrievedContexts: chatState.retrievedContexts,
-    isLoading: chatState.isLoading,
-    updateMessages,
-    updateRetrievedContexts,
-    setIsLoading,
-    resetChat
+  const updateMessages = (newMessages) => {
+    setMessages(newMessages);
   };
 
-  return <ChatContext.Provider value={value}>{children}</ChatContext.Provider>;
+  const resetChat = () => {
+    setMessages([]);
+  };
+
+  return (
+    <ChatContext.Provider
+      value={{
+        messages,
+        isLoading,
+        updateMessages,
+        setIsLoading,
+        resetChat
+      }}
+    >
+      {children}
+    </ChatContext.Provider>
+  );
 }
 
 // Custom hook to use the chat context
 export function useChat() {
   const context = useContext(ChatContext);
-  if (context === null) {
+  if (!context) {
     throw new Error('useChat must be used within a ChatProvider');
   }
   return context;

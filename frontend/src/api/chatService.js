@@ -1,21 +1,20 @@
-import apiClient from './client';
+import axios from 'axios';
+
+// In development, use localhost:8000, in production (Docker) use /api
+const API_URL = import.meta.env.DEV ? 'http://localhost:8000' : '/api';
 
 // Chat service implementation using the backend RAG chatbot API
 const chatService = {
   // Send a message to the AI assistant
-  sendMessage: async (message, history = []) => {
+  sendMessage: async (message) => {
     try {
-      const response = await apiClient.post('/chat/message', {
+      const response = await axios.post(`${API_URL}/chat/message`, {
         message: message,
-        history: history
+        history: []
       });
-      
-      return {
-        role: 'assistant',
-        content: response.data.response
-      };
+      return response.data;
     } catch (error) {
-      console.error('Error sending message to AI assistant:', error);
+      console.error('Error in chat service:', error);
       throw error;
     }
   },
@@ -31,7 +30,7 @@ const chatService = {
       }));
       
       // Send the message to the backend
-      const response = await apiClient.post('/chat/message', {
+      const response = await axios.post(`${API_URL}/chat/message`, {
         message: message,
         history: formattedHistory
       });
