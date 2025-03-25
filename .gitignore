@@ -65,3 +65,6 @@ tailwind.output.css
 *.pem
 .vercel
 .netlify 
+
+# Cursor
+.cursor/*
