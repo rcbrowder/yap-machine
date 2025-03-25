@@ -90,8 +90,8 @@ function JournalList() {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold">Your Journal</h2>
+      <div className="flex justify-end mb-6">
+
         <Link to="/new">
           <Button variant="default">
             <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 mr-2" viewBox="0 0 20 20" fill="currentColor">

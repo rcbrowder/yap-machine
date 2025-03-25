@@ -277,7 +277,8 @@ class RAGChatService:
                     
                     # Run the agent with the user's query
                     response = await temp_agent.run(message, client=self.client)
-                    response_text = response.content
+                    # Access the response text directly from the response object
+                    response_text = str(response)
                 except Exception as e:
                     logger.error(f"Error invoking model with direct prompt: {e}")
                     # Fall back to a simple response
@@ -307,8 +308,8 @@ class RAGChatService:
                     # Run the agent
                     response = await tool_agent.run(message, client=self.client)
                     
-                    # Extract the response
-                    response_text = response.content
+                    # Extract the response text directly
+                    response_text = str(response)
                     
                 except Exception as e:
                     logger.error(f"Error during model invocation or tool processing: {e}")
