@@ -4,7 +4,7 @@ import apiClient from './client';
 const DEFAULT_MOCK_ENTRIES = [
   {
     id: '1',
-    title: 'Getting Started with AI Journal',
+    title: 'Getting Started with Yap Machine',
     content: 'This is a sample journal entry to help you get started. Click the edit button to modify it or create a new entry.',
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString()

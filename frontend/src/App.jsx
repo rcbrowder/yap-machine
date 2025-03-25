@@ -6,7 +6,7 @@ import './App.css'
 function App() {
   return (
     <div className="text-center p-8">
-      <h1 className="text-2xl font-bold">AI Journal</h1>
+      <h1 className="text-2xl font-bold">Yap Machine</h1>
       <p className="mt-4">This app is now managed by React Router. See main.jsx for the routing configuration.</p>
     </div>
   );

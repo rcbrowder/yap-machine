@@ -9,7 +9,7 @@ from .db.vectordb import vector_db
 import sqlalchemy as sa
 import logging
 
-app = FastAPI(title="AI Journal API")
+app = FastAPI(title="Yap Machine API")
 
 # Add CORS middleware
 app.add_middleware(

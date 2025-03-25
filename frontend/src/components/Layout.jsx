@@ -11,7 +11,7 @@ export default function Layout() {
           <div className="flex items-center">
             <h1 className="text-2xl font-bold mr-8">
               <NavLink to="/" className="text-text hover:text-mainAccent transition-colors">
-                AI Journal
+                Yap Machine
               </NavLink>
             </h1>
             <div className="hidden sm:flex gap-4">
@@ -49,7 +49,7 @@ export default function Layout() {
         <div className="container mx-auto max-w-6xl px-4">
           <div className="flex flex-col sm:flex-row justify-between items-center">
             <p className="text-sm text-gray-600 mb-4 sm:mb-0">
-              © {new Date().getFullYear()} AI Journal. All rights reserved.
+              © {new Date().getFullYear()} Yap Machine. All rights reserved.
             </p>
             <div className="flex gap-4">
               <a href="#" className="text-sm text-text hover:text-mainAccent transition-colors">Privacy Policy</a>

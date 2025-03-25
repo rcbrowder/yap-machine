@@ -114,7 +114,7 @@ function AIChat() {
             </svg>
           </div>
           <div className="flex-1">
-            <h2 className="text-xl font-bold m-0">AI Journal Assistant</h2>
+            <h2 className="text-xl font-bold m-0">Yapper</h2>
             <p className="text-sm opacity-80">Ask questions about your journal entries</p>
           </div>
           <Button 

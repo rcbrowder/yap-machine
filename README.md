@@ -1,6 +1,6 @@
-# AI Journal
+# Yap Machine
 
-AI Journal is a private, local-first journaling application that combines traditional markdown journaling with AI-powered conversation capabilities. It allows you to write and organize your thoughts in a clean, modern interface while providing powerful AI features for retrieving memories, gaining insights, and analyzing patterns in your writing.
+Yap Machine is a private, local-first journaling application that combines traditional markdown journaling with AI-powered conversation capabilities. It allows you to write and organize your thoughts in a clean, modern interface while providing powerful AI features for retrieving memories, gaining insights, and analyzing patterns in your writing.
 
 ## Features
 
